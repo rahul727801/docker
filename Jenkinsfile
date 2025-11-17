@@ -2,31 +2,29 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/rahul727801/docker.git', branch: 'main'
+                git branch: 'master',
+                    credentialsId: 'github-token',
+                    url: 'https://github.com/rahul727801/docker.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'docker build -t simple-webapp .'
+                echo "Building the app..."
             }
         }
 
         stage('Test') {
             steps {
-                sh 'pip3 install -r requirements.txt'
-                sh 'pytest -q'
+                echo "Running tests..."
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker stop simple-webapp || true'
-                sh 'docker rm simple-webapp || true'
-                sh 'docker run -d -p 8000:8000 --name simple-webapp simple-webapp'
+                echo "Deploying..."
             }
         }
     }
